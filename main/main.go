@@ -57,7 +57,8 @@ func LoadServerControllers() error {
 	if err != nil {
 		return fmt.Errorf("main server: Unable to load views. %w", err)
 	}
-	http.HandleFunc("/", BaseChain(ControllerViewHandler(views, controllers.HelloWorld)))
+	http.HandleFunc("/hello", BaseChain(ControllerViewHandler(views, controllers.HelloWorld)))
+	http.HandleFunc("/", BaseChain(ControllerViewHandler(views, controllers.NotFound)))
 	return nil
 }
 
