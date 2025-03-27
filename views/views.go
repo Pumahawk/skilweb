@@ -14,13 +14,13 @@ var views map[string]*template.Template
 
 type ViewHtml struct {
 	Name string
-	Base string
+	Base[] string
 	Path string
 }
 
 func init() {
 	vs := []ViewHtml{
-		NewPageHtml("hello", "pages/hello.html"),
+		NewPageDHtml("hello", "pages/hello.html"),
 		NewPageHtml("404", "pages/404.html"),
 	}
 
@@ -34,16 +34,24 @@ func init() {
 	}
 }
 
+func NewPageDHtml(name, path string) ViewHtml {
+	return ViewHtml{
+		Base: []string{"pages/layout.html", "pages/dashboard-layout.html"},
+		Name: name,
+		Path: path,
+	}
+}
+
 func NewPageHtml(name, path string) ViewHtml {
 	return ViewHtml{
-		Base: "pages/layout.html",
+		Base: []string{"pages/layout.html"},
 		Name: name,
 		Path: path,
 	}
 }
 
 func (vh *ViewHtml) Template() (*template.Template, error) {
-	tmpl, err := template.ParseFS(pages, vh.Base)
+	tmpl, err := template.ParseFS(pages, vh.Base...)
 	if err != nil {
 		return nil, fmt.Errorf("view html: Unable to load base [Base=%s]. %w", vh.Base, err)
 	}

@@ -6,12 +6,13 @@ import (
 )
 
 type HelloMessage struct {
+	Title   string
 	Message string
 }
 
 func HelloWorld(r *http.Request) (string, any) {
 	log.Println("controller helloworld: Incoming request")
-	return "hello", HelloMessage{"Hello, World!"}
+	return "hello", HelloMessage{"Hello page", "Hello, World!"}
 }
 
 func NotFound(r *http.Request) (string, any) {
