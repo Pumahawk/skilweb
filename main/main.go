@@ -61,7 +61,7 @@ func LoadServerControllers() error {
 func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		select {
-		case <- r.Context().Done():
+		case <-r.Context().Done():
 			log.Printf("main controller view: Request context closed. %v", r.Context().Err())
 		default:
 			name, data := controller(r)

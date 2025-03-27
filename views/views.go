@@ -14,7 +14,7 @@ var views map[string]*template.Template
 
 type ViewHtml struct {
 	Name string
-	Base[] string
+	Base []string
 	Path string
 }
 
