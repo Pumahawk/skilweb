@@ -24,6 +24,8 @@ func main() {
 	}
 }
 
+type HttpChain = func(http.HandlerFunc) http.HandlerFunc
+
 func LoadFlags() (*Conf, error) {
 	var conf Conf
 	flag.StringVar(&conf.Address, "address", ":8000", "Http server address")
@@ -55,7 +57,7 @@ func LoadServerControllers() error {
 	if err != nil {
 		return fmt.Errorf("main server: Unable to load views. %w", err)
 	}
-	http.HandleFunc("/", ControllerViewHandler(views, controllers.HelloWorld))
+	http.HandleFunc("/", BaseChain(ControllerViewHandler(views, controllers.HelloWorld)))
 	return nil
 }
 
@@ -81,4 +83,25 @@ func ControllerViewHandler(views *views.Views, controller server.Controller) htt
 			}
 		}
 	}
+}
+
+func LogHandler(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("http_request: %s", r.URL.Path)
+		handler(w, r)
+	}
+}
+
+func Chain(handler http.HandlerFunc, chain ...HttpChain) http.HandlerFunc {
+	if len(chain) > 0 {
+		return chain[0](Chain(handler, chain[1:]...))
+	} else {
+		return func(w http.ResponseWriter, r *http.Request) {
+			handler(w, r)
+		}
+	}
+}
+
+func BaseChain(handler http.HandlerFunc) http.HandlerFunc {
+	return Chain(handler, LogHandler)
 }
