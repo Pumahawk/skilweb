@@ -5,48 +5,63 @@ import (
 	"fmt"
 	"html/template"
 	"io"
+	"log"
 )
 
 //go:embed pages/*
 var pages embed.FS
-var views []View = []View{
-	{
-		Name: "hello",
-		Path: []string{"pages/layout.html", "pages/hello.html"},
-	},
-	{
-		Name: "404",
-		Path: []string{"pages/layout.html", "pages/404.html"},
-	},
-}
+var views map[string]*template.Template
 
-type Templates = map[string]*template.Template
-type Views struct {
-	Templates Templates
-}
-
-type View struct {
+type ViewHtml struct {
 	Name string
-	Path []string
+	Base string
+	Path string
 }
 
-func NewViews() (*Views, error) {
-	tpls := make(Templates)
-	for _, vi := range views {
-		tpl, err := template.ParseFS(pages, vi.Path...)
-		if err != nil {
-			return nil, fmt.Errorf("views: Unable to load pages %w.", err)
-		}
-		tpls[vi.Name] = tpl
+func init() {
+	vs := []ViewHtml{
+		NewPageHtml("hello", "pages/hello.html"),
+		NewPageHtml("404", "pages/404.html"),
 	}
-	return &Views{tpls}, nil
+
+	views = make(map[string]*template.Template)
+	for _, v := range vs {
+		tmpl, err := v.Template()
+		if err != nil {
+			log.Fatalf("views init: Unable to load page html [Name=%s] [Path=%s]. %v", v.Name, v.Path, err)
+		}
+		views[v.Name] = tmpl
+	}
 }
 
-func (views *Views) Render(wr io.Writer, name string, data any) error {
-	tpl := views.Templates[name]
+func NewPageHtml(name, path string) ViewHtml {
+	return ViewHtml{
+		Base: "pages/layout.html",
+		Name: name,
+		Path: path,
+	}
+}
+
+func (vh *ViewHtml) Template() (*template.Template, error) {
+	tmpl, err := template.ParseFS(pages, vh.Base)
+	if err != nil {
+		return nil, fmt.Errorf("view html: Unable to load base [Base=%s]. %w", vh.Base, err)
+	}
+
+	tmpl, err = tmpl.ParseFS(pages, vh.Path)
+	if err != nil {
+		return nil, fmt.Errorf("view html: Unable to load path [Path=%s]. %w", vh.Path, err)
+	}
+
+	return tmpl, nil
+}
+
+func Render(wr io.Writer, name string, data any) error {
+	tpl := views[name]
 	if tpl == nil {
 		return fmt.Errorf("views render: Not found template %s", name)
 	}
+
 	err := tpl.Execute(wr, data)
 	if err != nil {
 		return fmt.Errorf("views render: Unable view rendering. %w", err)

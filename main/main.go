@@ -53,16 +53,12 @@ type Conf struct {
 }
 
 func LoadServerControllers() error {
-	views, err := views.NewViews()
-	if err != nil {
-		return fmt.Errorf("main server: Unable to load views. %w", err)
-	}
-	http.HandleFunc("/hello", BaseChain(ControllerViewHandler(views, controllers.HelloWorld)))
-	http.HandleFunc("/", BaseChain(ControllerViewHandler(views, controllers.NotFound)))
+	http.HandleFunc("/hello", BaseChain(ControllerViewHandler(controllers.HelloWorld)))
+	http.HandleFunc("/", BaseChain(ControllerViewHandler(controllers.NotFound)))
 	return nil
 }
 
-func ControllerViewHandler(views *views.Views, controller server.Controller) http.HandlerFunc {
+func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <- r.Context().Done():
