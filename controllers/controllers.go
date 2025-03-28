@@ -10,11 +10,11 @@ type HelloMessage struct {
 	Message string
 }
 
-func HelloWorld(r *http.Request) (string, any) {
+func HelloWorld(r *http.Request) (int, string, any) {
 	log.Println("controller helloworld: Incoming request")
-	return "hello", HelloMessage{"Hello page", "Hello, World!"}
+	return 200, "hello", HelloMessage{"Hello page", "Hello, World!"}
 }
 
-func NotFound(r *http.Request) (string, any) {
-	return "404", nil
+func NotFound(r *http.Request) (int, string, any) {
+	return 404, "404", nil
 }

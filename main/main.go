@@ -64,7 +64,7 @@ func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
 		case <-r.Context().Done():
 			log.Printf("main controller view: Request context closed. %v", r.Context().Err())
 		default:
-			name, data := controller(r)
+			code, name, data := controller(r)
 			var bf bytes.Buffer
 			err := views.Render(&bf, name, data)
 			if err != nil {
@@ -72,7 +72,7 @@ func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
 				w.WriteHeader(500)
 				return
 			}
-			w.WriteHeader(200)
+			w.WriteHeader(code)
 			_, err = bf.WriteTo(w)
 			if err != nil {
 				log.Printf("main controller view: Unable to write response, [Path=%s]. %v", r.URL.Path, err)
