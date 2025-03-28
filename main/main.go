@@ -85,8 +85,21 @@ func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
 func LogHandler(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("http_request: %s", r.URL.Path)
-		handler(w, r)
+		handler(NewLogResponseWriter(w), r)
 	}
+}
+
+type LogResponseWriter struct {
+	http.ResponseWriter
+}
+
+func (lw *LogResponseWriter) WriteHeader(code int) {
+	log.Printf("http_response: code %d", code)
+	lw.ResponseWriter.WriteHeader(code)
+}
+
+func NewLogResponseWriter(w http.ResponseWriter) http.ResponseWriter {
+	return &LogResponseWriter{w}
 }
 
 func Chain(handler http.HandlerFunc, chain ...HttpChain) http.HandlerFunc {
