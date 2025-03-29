@@ -7,5 +7,5 @@ type ProjectsDetailsResponse = DashboardData[services.ProjectDetails]
 
 type DashboardData[T any] struct {
 	Title string
-	Data T
+	Data  T
 }

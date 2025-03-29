@@ -19,7 +19,7 @@ func ProjectSearch(r *http.Request) (int, string, any) {
 
 	data = ProjectsSearchResponse{
 		Title: "Projects",
-		Data: projects,
+		Data:  projects,
 	}
 	return 200, "projects-search", data
 }
@@ -43,7 +43,7 @@ func ProjectDetails(r *http.Request) (int, string, any) {
 
 	data = ProjectsDetailsResponse{
 		Title: "Projects",
-		Data: *project,
+		Data:  *project,
 	}
 	return 200, "projects-details", data
 }

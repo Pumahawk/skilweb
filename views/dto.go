@@ -1,13 +1,13 @@
 package views
 
 type GenericViewData struct {
-	Title string
+	Title   string
 	Message string
 }
 
 func NewGenericViewData(title, message string) GenericViewData {
 	return GenericViewData{
-		Title: title,
+		Title:   title,
 		Message: message,
 	}
 }

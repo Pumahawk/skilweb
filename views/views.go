@@ -14,9 +14,9 @@ var pages embed.FS
 type Views = map[string]*template.Template
 
 type ViewHtml struct {
-	Name string
-	Base []string
-	Path string
+	Name    string
+	Base    []string
+	Path    string
 	FuncMap template.FuncMap
 }
 
@@ -47,9 +47,9 @@ func NewPageDHtml(funcMap template.FuncMap, name, path string) ViewHtml {
 
 func NewPageHtml(funcMap template.FuncMap, name, path string) ViewHtml {
 	return ViewHtml{
-		Base: []string{"pages/layout.html"},
-		Name: name,
-		Path: path,
+		Base:    []string{"pages/layout.html"},
+		Name:    name,
+		Path:    path,
 		FuncMap: funcMap,
 	}
 }
