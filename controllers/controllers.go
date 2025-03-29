@@ -31,6 +31,7 @@ func ProjectsSearch(r *http.Request) (int, string, any) {
 	}
 
 	data = ProjectsSearchResponse{
+		Title: "Projects",
 		Data: projects,
 	}
 	return 200, "projects-search", data

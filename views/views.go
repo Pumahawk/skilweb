@@ -10,23 +10,25 @@ import (
 
 //go:embed pages/*
 var pages embed.FS
-var views map[string]*template.Template
+
+type Views = map[string]*template.Template
 
 type ViewHtml struct {
 	Name string
 	Base []string
 	Path string
+	FuncMap template.FuncMap
 }
 
-func init() {
+func LoadViews(funcMap template.FuncMap) (views Views) {
 	vs := []ViewHtml{
-		NewPageDHtml("projects-search", "pages/projects-search.html"),
-		NewPageDHtml("hello", "pages/hello.html"),
-		NewPageHtml("404", "pages/404.html"),
-		NewPageHtml("500", "pages/500.html"),
+		NewPageDHtml(funcMap, "projects-search", "pages/projects-search.html"),
+		NewPageDHtml(funcMap, "hello", "pages/hello.html"),
+		NewPageHtml(funcMap, "404", "pages/404.html"),
+		NewPageHtml(funcMap, "500", "pages/500.html"),
 	}
 
-	views = make(map[string]*template.Template)
+	views = make(Views)
 	for _, v := range vs {
 		tmpl, err := v.Template()
 		if err != nil {
@@ -34,26 +36,27 @@ func init() {
 		}
 		views[v.Name] = tmpl
 	}
+	return
 }
 
-func NewPageDHtml(name, path string) ViewHtml {
-	return ViewHtml{
-		Base: []string{"pages/layout.html", "pages/dashboard-layout.html"},
-		Name: name,
-		Path: path,
-	}
+func NewPageDHtml(funcMap template.FuncMap, name, path string) ViewHtml {
+	v := NewPageHtml(funcMap, name, path)
+	v.Base = []string{"pages/layout.html", "pages/dashboard-layout.html"}
+	return v
 }
 
-func NewPageHtml(name, path string) ViewHtml {
+func NewPageHtml(funcMap template.FuncMap, name, path string) ViewHtml {
 	return ViewHtml{
 		Base: []string{"pages/layout.html"},
 		Name: name,
 		Path: path,
+		FuncMap: funcMap,
 	}
 }
 
 func (vh *ViewHtml) Template() (*template.Template, error) {
 	tmpl, err := template.ParseFS(pages, vh.Base...)
+	tmpl.Funcs(vh.FuncMap)
 	if err != nil {
 		return nil, fmt.Errorf("view html: Unable to load base [Base=%s]. %w", vh.Base, err)
 	}
@@ -66,7 +69,7 @@ func (vh *ViewHtml) Template() (*template.Template, error) {
 	return tmpl, nil
 }
 
-func Render(wr io.Writer, name string, data any) error {
+func Render(views Views, wr io.Writer, name string, data any) error {
 	tpl := views[name]
 	if tpl == nil {
 		return fmt.Errorf("views render: Not found template %s", name)
@@ -78,3 +81,4 @@ func Render(wr io.Writer, name string, data any) error {
 	}
 	return nil
 }
+

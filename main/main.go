@@ -60,6 +60,7 @@ func LoadServerControllers() error {
 }
 
 func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
+	vs := views.LoadViews(controllers.LinksFuncMap())
 	return func(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-r.Context().Done():
@@ -67,7 +68,7 @@ func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
 		default:
 			code, name, data := controller(r)
 			var bf bytes.Buffer
-			err := views.Render(&bf, name, data)
+			err := views.Render(vs, &bf, name, data)
 			if err != nil {
 				log.Printf("main controller view: Unable rendering view, [Path=%s]. %v", r.URL.Path, err)
 				w.WriteHeader(500)

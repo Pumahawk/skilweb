@@ -3,13 +3,14 @@ package services
 type Project struct {
 	Id string
 	Name string
+	Description string
 }
 
 func ProjectSerach() ([]Project, error) {
 	data := []Project{
 		{
-			Id: "0001",
-			Name: "fyrst-project",
+			Id: "001",
+			Name: "first-project",
 		},
 	}
 	return data, nil
