@@ -1,0 +1,10 @@
+{{- define "layout_content" -}}
+	{{ with .Title }}
+		<div>
+			{{ . }}
+		</div>
+	{{ end }}
+	<div>
+		{{ .Message }}
+	</div>
+{{- end -}}

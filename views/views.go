@@ -23,9 +23,9 @@ type ViewHtml struct {
 func LoadViews(funcMap template.FuncMap) (views Views) {
 	vs := []ViewHtml{
 		NewPageDHtml(funcMap, "projects-search", "pages/projects-search.html"),
+		NewPageDHtml(funcMap, "projects-details", "pages/projects-details.html"),
 		NewPageDHtml(funcMap, "hello", "pages/hello.html"),
-		NewPageHtml(funcMap, "404", "pages/404.html"),
-		NewPageHtml(funcMap, "500", "pages/500.html"),
+		NewPageHtml(funcMap, "generic", "pages/generic.html"),
 	}
 
 	views = make(Views)
@@ -56,10 +56,10 @@ func NewPageHtml(funcMap template.FuncMap, name, path string) ViewHtml {
 
 func (vh *ViewHtml) Template() (*template.Template, error) {
 	tmpl, err := template.ParseFS(pages, vh.Base...)
-	tmpl.Funcs(vh.FuncMap)
 	if err != nil {
 		return nil, fmt.Errorf("view html: Unable to load base [Base=%s]. %w", vh.Base, err)
 	}
+	tmpl.Funcs(vh.FuncMap)
 
 	tmpl, err = tmpl.ParseFS(pages, vh.Path)
 	if err != nil {
@@ -81,4 +81,3 @@ func Render(views Views, wr io.Writer, name string, data any) error {
 	}
 	return nil
 }
-

@@ -1,0 +1,23 @@
+{{- define "dashboard_layout_content" -}}
+	<div class="row">
+		<div class="col">
+			<h1>Projects details</h1>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col w-100">
+			{{ template "project_card" .Data }}
+		</div>
+	</div>
+{{- end -}}
+
+{{- define "project_card" -}}
+<div class="">
+	<div class="">
+		{{ .Name }}
+	</div>
+	<div class="">
+		{{ .Description }}
+	</div>
+</div>
+{{- end -}}
