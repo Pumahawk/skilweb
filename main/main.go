@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"flag"
 	"fmt"
 	"log"
@@ -9,7 +8,6 @@ import (
 
 	"github.com/pumahawk/skilweb/controllers"
 	"github.com/pumahawk/skilweb/server"
-	"github.com/pumahawk/skilweb/views"
 )
 
 func main() {
@@ -53,36 +51,15 @@ type Conf struct {
 }
 
 func LoadServerControllers() error {
-	http.HandleFunc("/hello", BaseChain(ControllerViewHandler(controllers.HelloWorld)))
-	http.HandleFunc("/projects/search", BaseChain(ControllerViewHandler(controllers.ProjectSearch)))
-	http.HandleFunc("/projects/details/{id}", BaseChain(ControllerViewHandler(controllers.ProjectDetails)))
-	http.HandleFunc("/", BaseChain(ControllerViewHandler(controllers.NotFound)))
+	http.HandleFunc("/hello", BaseChain(server.ControllerViewHandler(controllers.HelloWorld)))
+	http.HandleFunc("/projects/search", BaseChain(server.ControllerViewHandler(controllers.ProjectSearch)))
+	http.HandleFunc("/projects/details/{id}", BaseChain(server.ControllerViewHandler(controllers.ProjectDetails)))
+	http.HandleFunc("/", BaseChain(server.ControllerViewHandler(controllers.NotFound)))
 	return nil
 }
 
-func ControllerViewHandler(controller server.Controller) http.HandlerFunc {
-	vs := views.LoadViews(controllers.LinksFuncMap())
-	return func(w http.ResponseWriter, r *http.Request) {
-		select {
-		case <-r.Context().Done():
-			log.Printf("main controller view: Request context closed. %v", r.Context().Err())
-		default:
-			code, name, data := controller(r)
-			var bf bytes.Buffer
-			err := views.Render(vs, &bf, name, data)
-			if err != nil {
-				log.Printf("main controller view: Unable rendering view, [Path=%s]. %v", r.URL.Path, err)
-				w.WriteHeader(500)
-				return
-			}
-			w.WriteHeader(code)
-			_, err = bf.WriteTo(w)
-			if err != nil {
-				log.Printf("main controller view: Unable to write response, [Path=%s]. %v", r.URL.Path, err)
-				return
-			}
-		}
-	}
+type LogResponseWriter struct {
+	http.ResponseWriter
 }
 
 func LogHandler(handler http.HandlerFunc) http.HandlerFunc {
@@ -90,10 +67,6 @@ func LogHandler(handler http.HandlerFunc) http.HandlerFunc {
 		log.Printf("http_request: %s", r.URL.Path)
 		handler(NewLogResponseWriter(w), r)
 	}
-}
-
-type LogResponseWriter struct {
-	http.ResponseWriter
 }
 
 func (lw *LogResponseWriter) WriteHeader(code int) {
