@@ -20,8 +20,10 @@ type ViewHtml struct {
 
 func init() {
 	vs := []ViewHtml{
+		NewPageDHtml("projects-search", "pages/projects-search.html"),
 		NewPageDHtml("hello", "pages/hello.html"),
 		NewPageHtml("404", "pages/404.html"),
+		NewPageHtml("500", "pages/500.html"),
 	}
 
 	views = make(map[string]*template.Template)

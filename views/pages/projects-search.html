@@ -1,0 +1,14 @@
+{{- define "dashboard_layout_content" -}}
+	<div class="row">
+		<div class="col">
+			<h1>Projects</h1>
+		</div>
+	</div>
+	{{- range .Data }}
+	<div class="row">
+		<div class="col w-100">
+			Project <b>{{ .Name }}</b>
+		</div>
+	</div>
+	{{- end }}
+{{- end -}}
