@@ -2,7 +2,7 @@ package views
 
 import (
 	"bytes"
-	"html/template"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -10,9 +10,7 @@ import (
 )
 
 func TestRender(t *testing.T) {
-	funcs := make(template.FuncMap)
-	funcs["link_projectDetails"] = linkMock
-	v := LoadViews(funcs)
+	v := LoadViews(LinksFuncMap())
 	data := ProjectsDetailsResponse{
 		Title: "Myt project title",
 		Data: services.ProjectDetails{
@@ -29,8 +27,5 @@ func TestRender(t *testing.T) {
 	if !strings.Contains(ts, "MyTest Project") {
 		t.Errorf("Don't cointains project name")
 	}
-}
-
-func linkMock(id string) string {
-	return "unit-tests"
+	fmt.Println(ts)
 }

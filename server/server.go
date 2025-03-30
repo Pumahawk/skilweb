@@ -5,14 +5,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/pumahawk/skilweb/controllers"
 	"github.com/pumahawk/skilweb/views"
 )
 
 type Controller = func(r *http.Request) (int, string, any)
 
 func ControllerViewHandler(controller Controller) http.HandlerFunc {
-	vs := views.LoadViews(controllers.LinksFuncMap())
+	vs := views.LoadViews(views.LinksFuncMap())
 	return func(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-r.Context().Done():
