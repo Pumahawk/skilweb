@@ -9,7 +9,7 @@ import (
 )
 
 func ProjectSearch(r *http.Request) (int, string, any) {
-	var data ProjectsSearchResponse
+	var data views.ProjectsSearchResponse
 
 	projects, err := services.ProjectSerach()
 	if err != nil {
@@ -17,7 +17,7 @@ func ProjectSearch(r *http.Request) (int, string, any) {
 		return 500, "generic", views.ServerErrorData("Search problems")
 	}
 
-	data = ProjectsSearchResponse{
+	data = views.ProjectsSearchResponse{
 		Title: "Projects",
 		Data:  projects,
 	}
@@ -25,7 +25,7 @@ func ProjectSearch(r *http.Request) (int, string, any) {
 }
 
 func ProjectDetails(r *http.Request) (int, string, any) {
-	var data ProjectsDetailsResponse
+	var data views.ProjectsDetailsResponse
 
 	id := r.PathValue("id")
 	if id == "" {
@@ -41,7 +41,7 @@ func ProjectDetails(r *http.Request) (int, string, any) {
 		return 500, "generic", views.ServerErrorData("Search problems")
 	}
 
-	data = ProjectsDetailsResponse{
+	data = views.ProjectsDetailsResponse{
 		Title: "Projects",
 		Data:  *project,
 	}

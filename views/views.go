@@ -55,11 +55,10 @@ func NewPageHtml(funcMap template.FuncMap, name, path string) ViewHtml {
 }
 
 func (vh *ViewHtml) Template() (*template.Template, error) {
-	tmpl, err := template.ParseFS(pages, vh.Base...)
+	tmpl, err := template.New("base").Funcs(vh.FuncMap).ParseFS(pages, vh.Base...)
 	if err != nil {
 		return nil, fmt.Errorf("view html: Unable to load base [Base=%s]. %w", vh.Base, err)
 	}
-	tmpl.Funcs(vh.FuncMap)
 
 	tmpl, err = tmpl.ParseFS(pages, vh.Path)
 	if err != nil {
@@ -75,7 +74,7 @@ func Render(views Views, wr io.Writer, name string, data any) error {
 		return fmt.Errorf("views render: Not found template %s", name)
 	}
 
-	err := tpl.Execute(wr, data)
+	err := tpl.ExecuteTemplate(wr, "layout.html", data)
 	if err != nil {
 		return fmt.Errorf("views render: Unable view rendering. %w", err)
 	}
