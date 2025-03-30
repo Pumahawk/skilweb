@@ -52,8 +52,10 @@ type Conf struct {
 
 func LoadServerControllers() error {
 	http.HandleFunc("/hello", BaseChain(server.ControllerViewHandler(controllers.HelloWorld)))
-	http.HandleFunc("/projects/search", BaseChain(server.ControllerViewHandler(controllers.ProjectSearch)))
-	http.HandleFunc("/projects/details/{id}", BaseChain(server.ControllerViewHandler(controllers.ProjectDetails)))
+	http.HandleFunc("POST /projects", BaseChain(server.ControllerViewHandler(controllers.ProjectCreate)))
+	http.HandleFunc("GET /projects", BaseChain(server.ControllerViewHandler(controllers.ProjectCreateForm)))
+	http.HandleFunc("GET /projects/search", BaseChain(server.ControllerViewHandler(controllers.ProjectSearch)))
+	http.HandleFunc("GET /projects/{id}", BaseChain(server.ControllerViewHandler(controllers.ProjectDetails)))
 	http.HandleFunc("/", BaseChain(server.ControllerViewHandler(controllers.NotFound)))
 	return nil
 }

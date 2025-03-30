@@ -1,6 +1,9 @@
 package services
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 var NotFound = fmt.Errorf("Missinc record")
 
@@ -16,7 +19,12 @@ type Project struct {
 	Description string
 }
 
-func ProjectSerach() ([]Project, error) {
+type ProjectCreateData struct {
+	Name string
+	Description string
+}
+
+func ProjectSerach(ctx context.Context) ([]Project, error) {
 	data := []Project{
 		{
 			Id:          "001",
@@ -32,10 +40,14 @@ func ProjectSerach() ([]Project, error) {
 	return data, nil
 }
 
-func ProjectDetailsById(id string) (*ProjectDetails, error) {
+func ProjectDetailsById(ctx context.Context, id string) (*ProjectDetails, error) {
 	return &ProjectDetails{
 		Id:          "001",
 		Name:        "Project details",
 		Description: "Testing project details",
 	}, nil
+}
+
+func ProjectCreate(ctx context.Context, project ProjectCreateData) (string, error) {
+	return "project-created-id", nil
 }

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"log"
 	"net/http"
+	"regexp"
 
 	"github.com/pumahawk/skilweb/views"
 )
@@ -18,6 +19,19 @@ func ControllerViewHandler(controller Controller) http.HandlerFunc {
 			log.Printf("main controller view: Request context closed. %v", r.Context().Err())
 		default:
 			code, name, data := controller(r)
+			regx := regexp.MustCompile("^redirect:(..*)")
+			if regx.MatchString(name) {
+				path := regx.FindStringSubmatch(name)
+				if len(path) != 2 {
+					log.Printf("Inavalid redirect value: %s", name)
+					w.WriteHeader(500)
+					return
+				}
+
+				url := path[1]
+				http.Redirect(w, r, url, http.StatusSeeOther)
+				return
+			}
 			var bf bytes.Buffer
 			err := views.Render(vs, &bf, name, data)
 			if err != nil {

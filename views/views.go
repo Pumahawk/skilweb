@@ -24,6 +24,7 @@ func LoadViews(funcMap template.FuncMap) (views Views) {
 	vs := []ViewHtml{
 		NewPageDHtml(funcMap, "projects-search", "pages/projects-search.html"),
 		NewPageDHtml(funcMap, "projects-details", "pages/projects-details.html"),
+		NewPageDHtml(funcMap, "projects-create", "pages/projects-create.html"),
 		NewPageDHtml(funcMap, "hello", "pages/hello.html"),
 		NewPageHtml(funcMap, "generic", "pages/generic.html"),
 	}
