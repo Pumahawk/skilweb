@@ -1,43 +1,42 @@
-.PHONY: bk-clean bk-run bk-build fr-install
+.PHONY: be-clean be-run be-build fe-install
 
 ARG=""
 
 PROJECT_NAME="Skilweb"
 
 # Frontend vars
-SOURCE_FR_ROOT=source-frontend
-FBK_GFSR_TARGET_DIR=$(SOURCE_FR_ROOT)/dist
-FR_FS=$(shell git ls-files source-frontend)
+SOURCE_FE_ROOT=source-frontend
+FE_TARGET_DIR=$(SOURCE_FE_ROOT)/dist
+FE_FS=$(shell git ls-files source-frontend)
 
 # Backend vars
-SOURCE_BK_ROOT=source-backend
-BK_TARGET_DIR=target/backend
-BK_TARGET_EXEC=$(BK_TARGET_DIR)/main
-BK_GFS=$(shell git ls-files source-frontend)
+SOURCE_BE_ROOT=source-backend
+BE_TARGET_DIR=target/backend
+BE_TARGET_EXEC=$(BE_TARGET_DIR)/main
+BE_GFS=$(shell git ls-files source-backend)
 
-fr-install: $(SOURCE_FR_ROOT)/node_modules
+fe-install: $(SOURCE_FE_ROOT)/node_modules
 
-$(SOURCE_FR_ROOT)/node_modules: 
-	@cd $(SOURCE_FR_ROOT) && npm install --loglevel verbose
+$(SOURCE_FE_ROOT)/node_modules: 
+	@cd $(SOURCE_FE_ROOT) && npm install --loglevel verbose
 
-fr-build: fr-install $(FR_FS)
-	@cd $(SOURCE_FR_RO
-	OT) && npm run build
+fe-build: fe-install $(FE_FS)
+	@cd $(SOURCE_FE_ROOT) && npm run build
 
-fr-run: fr-install
-	@cd $(SOURCE_FR_ROOT) && npm run dev
+fe-run: fe-install
+	@cd $(SOURCE_FE_ROOT) && npm run dev
 
-fr-clean:
-	@if [ -d $(FR_TARGET_DIR) ]; then echo Delete fr target directory; rm -r $(FR_TARGET_DIR); fi;
+fe-clean:
+	@if [ -d $(FE_TARGET_DIR) ]; then echo Delete fr target directory; rm -r $(FE_TARGET_DIR); fi;
 
-$(BK_TARGET_EXEC): $(BK_GFS)
+$(BE_TARGET_EXEC): $(BE_GFS)
 	@echo Start build Go bk $(PROJECT_NAME)
-	cd $(SOURCE_BK_ROOT) && go build -o ../$(BK_TARGET_EXEC) main/main.go
+	cd $(SOURCE_BE_ROOT) && go build -o ../$(BE_TARGET_EXEC) main/main.go
 
-bk-build: $(BK_TARGET_EXEC)
+be-build: $(BE_TARGET_EXEC)
 
-bk-run: bk-build
-	@$(BK_TARGET_EXEC) $(ARG)
+be-run: be-build
+	@$(BE_TARGET_EXEC) $(ARG)
 
-bk-clean:
-	@if [ -d $(BK_TARGET_DIR) ]; then echo Delete bk target directory; rm -r $(BK_TARGET_DIR); fi;
+be-clean:
+	@if [ -d $(BE_TARGET_DIR) ]; then echo Delete bk target directory; rm -r $(BE_TARGET_DIR); fi;
