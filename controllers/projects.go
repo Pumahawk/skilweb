@@ -52,15 +52,15 @@ func ProjectCreate(r *http.Request) (int, string, any) {
 	r.ParseForm()
 	name := r.PostFormValue("name")
 	if name == "" {
-		return 400, "generic", views.NewGenericViewData("Bad request", "Mandatory parameter name") 
+		return 400, "generic", views.NewGenericViewData("Bad request", "Mandatory parameter name")
 	}
 	description := r.PostFormValue("description")
 	if description == "" {
-		return 400, "generic", views.NewGenericViewData("Bad request", "Mandatory parameter description") 
+		return 400, "generic", views.NewGenericViewData("Bad request", "Mandatory parameter description")
 	}
 
 	project := services.ProjectCreateData{
-		Name: name,
+		Name:        name,
 		Description: description,
 	}
 

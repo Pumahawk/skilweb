@@ -20,7 +20,7 @@ type Project struct {
 }
 
 type ProjectCreateData struct {
-	Name string
+	Name        string
 	Description string
 }
 

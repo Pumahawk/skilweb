@@ -19,8 +19,8 @@ func ProjectSearchLink() string {
 
 func LinksFuncMap() template.FuncMap {
 	return template.FuncMap{
-		"link_projectSearch": ProjectSearchLink,
+		"link_projectSearch":  ProjectSearchLink,
 		"link_projectDetails": ProjectDetailsLink,
-		"link_projectCreate": ProjectCreateLink,
+		"link_projectCreate":  ProjectCreateLink,
 	}
 }
