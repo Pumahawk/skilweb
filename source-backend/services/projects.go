@@ -24,7 +24,7 @@ type ProjectCreateData struct {
 	Description string
 }
 
-func ProjectSerach(ctx context.Context) ([]Project, error) {
+func ProjectSearch(ctx context.Context) ([]Project, error) {
 	data := []Project{
 		{
 			Id:          "001",

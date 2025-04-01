@@ -1,50 +1,54 @@
 package server
 
 import (
-	"bytes"
+	"encoding/json"
+	"io"
 	"log"
 	"net/http"
-	"regexp"
-
-	"github.com/pumahawk/skilweb/views"
 )
 
-type Controller = func(r *http.Request) (int, string, any)
+type Controller = func(r *http.Request) ControllerResponse[any]
+
+type ControllerResponse[T any] struct {
+	Code int
+	Data T
+}
+
+type MessageData struct {
+	Message string
+}
 
 func ControllerViewHandler(controller Controller) http.HandlerFunc {
-	vs := views.LoadViews(views.LinksFuncMap())
 	return func(w http.ResponseWriter, r *http.Request) {
 		select {
 		case <-r.Context().Done():
 			log.Printf("main controller view: Request context closed. %v", r.Context().Err())
 		default:
-			code, name, data := controller(r)
-			regx := regexp.MustCompile("^redirect:(..*)")
-			if regx.MatchString(name) {
-				path := regx.FindStringSubmatch(name)
-				if len(path) != 2 {
-					log.Printf("Inavalid redirect value: %s", name)
-					w.WriteHeader(500)
-					return
-				}
-
-				url := path[1]
-				http.Redirect(w, r, url, http.StatusSeeOther)
-				return
-			}
-			var bf bytes.Buffer
-			err := views.Render(vs, &bf, name, data)
-			if err != nil {
-				log.Printf("main controller view: Unable rendering view, [Path=%s]. %v", r.URL.Path, err)
-				w.WriteHeader(500)
-				return
-			}
-			w.WriteHeader(code)
-			_, err = bf.WriteTo(w)
-			if err != nil {
-				log.Printf("main controller view: Unable to write response, [Path=%s]. %v", r.URL.Path, err)
-				return
+			res := controller(r)
+			w.WriteHeader(res.Code)
+			if err := json.NewEncoder(w).Encode(res.Data); err != nil {
+				log.Printf("server controller handler: Invalid json response. %v", err)
 			}
 		}
 	}
+}
+
+func NewResponse(code int, data any) ControllerResponse[any] {
+	return ControllerResponse[any]{
+		Code: code,
+		Data: data,
+	}
+}
+
+func MessageResponse(code int, message string) ControllerResponse[any]  {
+	return ControllerResponse[any]{
+		Code: code,
+		Data: MessageData{
+			Message: message,
+		},
+	}
+}
+
+func ReadBody[T any](r io.Reader, v T) error {
+	return json.NewDecoder(r).Decode(v)
 }

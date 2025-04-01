@@ -62,12 +62,10 @@ type Conf struct {
 }
 
 func LoadServerControllers(db *sql.DB) error {
-	http.HandleFunc("/hello", BaseChain(db, server.ControllerViewHandler(controllers.HelloWorld)))
 	http.HandleFunc("POST /projects", BaseChain(db, server.ControllerViewHandler(controllers.ProjectCreate)))
-	http.HandleFunc("GET /projects", BaseChain(db, server.ControllerViewHandler(controllers.ProjectCreateForm)))
 	http.HandleFunc("GET /projects/search", BaseChain(db, server.ControllerViewHandler(controllers.ProjectSearch)))
 	http.HandleFunc("GET /projects/{id}", BaseChain(db, server.ControllerViewHandler(controllers.ProjectDetails)))
-	http.HandleFunc("/", BaseChain(db, server.ControllerViewHandler(controllers.NotFound)))
+	http.HandleFunc("/", BaseChain(db, http.NotFound))
 	return nil
 }
 
