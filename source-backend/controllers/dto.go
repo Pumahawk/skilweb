@@ -22,3 +22,11 @@ type ProjectCreateRequestDTO struct {
 	Description string `json:"description"`
 }
 
+
+type SiteMetadataDTO struct {
+	Pages []PagesDTO `json:"pages"`
+}
+
+type PagesDTO struct {
+	Type string `json:"type"`
+}

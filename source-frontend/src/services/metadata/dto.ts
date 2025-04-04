@@ -5,10 +5,6 @@ export interface SiteMetadata {
 	pages: BackendPage[];
 }
 
-export interface SiteMetadata {
-	pages: BackendPage[];
-}
-
 export interface BackendPage {
 	type: PageType;
 }

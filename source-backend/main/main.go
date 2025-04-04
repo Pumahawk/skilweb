@@ -62,6 +62,7 @@ type Conf struct {
 }
 
 func LoadServerControllers(db *sql.DB) error {
+	http.HandleFunc("GET /api/metadata", BaseChain(db, server.ControllerViewHandler(controllers.MetadataController)))
 	http.HandleFunc("POST /projects", BaseChain(db, server.ControllerViewHandler(controllers.ProjectCreate)))
 	http.HandleFunc("GET /projects/search", BaseChain(db, server.ControllerViewHandler(controllers.ProjectSearch)))
 	http.HandleFunc("GET /projects/{id}", BaseChain(db, server.ControllerViewHandler(controllers.ProjectDetails)))
