@@ -1,18 +1,35 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import Dashboard from './dashboard/Dashboard'
-import { getSiteMetadata, SiteMetadata } from './services/layout';
+import { metadataClient } from './services/metadata/client';
+import { SiteMetadata } from './services/metadata/dto';
 
 function App() {
 	const [value, setValue] = useState(undefined as SiteMetadata | undefined);
+	const [error, setError] = useState(undefined as any | undefined);
 	useEffect(() => {
-		getSiteMetadata().then(metadata => setValue(metadata))
+		metadataClient.getSiteMetadata()
+		.then(metadata => setValue(metadata))
+		.catch(error => {
+			console.log("Unable to retrieve metadata informations", error)
+			setError(error)
+			
+		});
 	}, [])
   return (
     <>
-    { value ? <Dashboard/> : <div>Loading...</div> }
+    { error && <MetadataError error={error}/>}
+    { error == undefined && (value ? <Dashboard metadata={value}/> : <div>Loading...</div>) }
     </>
   )
+}
+
+function MetadataError(props: {error: any}) {
+	return (
+		<>
+		Error...
+		</>
+	)
 }
 
 export default App

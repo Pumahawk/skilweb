@@ -23,7 +23,12 @@ const Drawer = styled(MuiDrawer)({
   },
 });
 
-export default function SideMenu() {
+export interface MenuVoice {
+	label: string;
+	path: string;
+}
+
+export default function SideMenu(pages: { voices: MenuVoice[] }) {
   return (
     <Drawer
       variant="permanent"

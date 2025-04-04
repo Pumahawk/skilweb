@@ -1,10 +1,13 @@
+export type PageType = 'search';
+export type FilterType = 'text';
 
 export interface SiteMetadata {
 	pages: BackendPage[];
 }
 
-export type PageType = 'search';
-export type FilterType = 'text';
+export interface SiteMetadata {
+	pages: BackendPage[];
+}
 
 export interface BackendPage {
 	type: PageType;
@@ -24,18 +27,4 @@ export interface TextFilter extends SearchFilter {
 export interface SearchPage extends BackendPage {
 	type: 'search';
 	filters: SearchFilter[];
-}
-
-export async function getSiteMetadata(): Promise<SiteMetadata> {
-	return new Promise(resolve => {
-		const projectSearchPage: SearchPage = {
-			type: 'search',
-			filters: []
-		};
-		setTimeout(() => {
-			resolve({
-				pages: [ projectSearchPage ]
-			})
-		}, 10000);
-	})
 }

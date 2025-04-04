@@ -16,6 +16,7 @@ import {
   dataGridCustomizations,
   treeViewCustomizations,
 } from './theme/customizations';
+import { SiteMetadata } from '../services/metadata/dto';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -23,7 +24,7 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
-export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+export default function Dashboard(props: { disableCustomTheme?: boolean, metadata: SiteMetadata}) {
   return (
     <AppTheme {...props} themeComponents={xThemeComponents}>
       <CssBaseline enableColorScheme />
