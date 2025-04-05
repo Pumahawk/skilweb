@@ -1,11 +1,11 @@
-import { SiteMetadata } from "../services/metadata/dto"
+import { BackendPage, SiteMetadata } from "../services/metadata/dto"
 
 export function Dashboard(props: {metadata: SiteMetadata}) {
 	return (
 		<div>
 			<Header/>
 			<div>
-				<Menu/>
+				<Menu pages={props.metadata.pages}/>
 				<Page/>
 			</div>
 			<Footer/>
@@ -19,9 +19,12 @@ export function Header() {
 	)
 }
 
-export function Menu() {
+export function Menu(props: {pages: BackendPage[]}) {
 	return (
-		<div>Menu</div>
+		<div>
+			<div>Menu</div>
+			{ props.pages && props.pages.map((p, i) => (<div id={i.toString()}>Type: {p.type}</div>)) }
+		</div>
 	)
 }
 
