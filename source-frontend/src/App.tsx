@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import Dashboard from './dashboard/Dashboard'
 import { metadataClient } from './services/metadata/client';
 import { SiteMetadata } from './services/metadata/dto';
+import { Dashboard } from './dashboard/dashboard';
 
 function App() {
 	const [value, setValue] = useState(undefined as SiteMetadata | undefined);
