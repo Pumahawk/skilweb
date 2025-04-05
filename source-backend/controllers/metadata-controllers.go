@@ -20,7 +20,7 @@ func MetadataController(r *http.Request) server.ControllerResponse[any] {
 
 func mapMetadata(d *services.SiteMetadata) (result SiteMetadataDTO) {
 	for _, p := range d.Pages {
-		result.Pages = append(result.Pages, PagesDTO{p.Type()})
+		result.Pages = append(result.Pages, PagesDTO{p.Type})
 	}
 	return
 }
