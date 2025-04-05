@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -20,7 +21,42 @@ func MetadataController(r *http.Request) server.ControllerResponse[any] {
 
 func mapMetadata(d *services.SiteMetadata) (result SiteMetadataDTO) {
 	for _, p := range d.Pages {
-		result.Pages = append(result.Pages, PagesDTO{p.Type})
+		pdto := mapPageDTO(p)
+		result.Pages = append(result.Pages, pdto)
 	}
 	return
+}
+
+func mapPageDTO(p services.BackendPage) any {
+	switch p := p.(type) {
+	case *services.SearchPage: 
+		return mapSearchPage(p)
+	default:
+		panic(fmt.Errorf("metadata-controller mapPageDTO: Unable map filter. Missing type mapping. Add Type mapping to source code. Type=%T", p))
+	}
+}
+
+func mapSearchPage(p *services.SearchPage) SearchPagesDTO {
+	var filters []any
+	for _, f := range p.Filters {
+		switch f := f.(type) {
+		case *services.TextFilter:
+			filters = append(filters, mapTextFilter(f))
+		default:
+			panic(fmt.Errorf("metadata-controller mapSearchPage: Unable map filter. Missing type mapping. Add Type mapping to source code. Type=%T", f))
+		}
+	}
+	return SearchPagesDTO{
+		Id: p.Id(),
+		Type: p.Type(),
+		Filters: filters,
+	}
+}
+
+func mapTextFilter(f *services.TextFilter) TextFilter {
+	return TextFilter{
+		Type: f.Type(),
+		Name: f.Name(),
+		Label: f.Label(),
+	}
 }
