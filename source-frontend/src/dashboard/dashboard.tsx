@@ -1,6 +1,6 @@
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
+import { Accordion, AccordionDetails, AccordionSummary, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, TextField, Typography } from "@mui/material"
 import { BackendPage, SearchFilterData, SearchPageData, SiteMetadata } from "../services/metadata/dto"
-import { People, Work } from "@mui/icons-material"
+import { ArrowDownward, People, Work } from "@mui/icons-material"
 
 import Box from "@mui/material/Box"
 
@@ -102,9 +102,17 @@ function SearchPage(props: {data: SearchPageData}) {
 
 function SearchFilters(props: {filters: SearchFilterData[]}) {
 	return (
-		<Box>
-			Filters....
-		</Box>
+		<Accordion>
+			<AccordionSummary expandIcon={<ArrowDownward/>}>
+				<Typography>
+					Filters
+				</Typography>
+			</AccordionSummary>
+			<AccordionDetails>
+				<TextField sx={{mr: 2}} id="name" name="name" label="Name"/>
+				<TextField id="email" name="filter" label="E-mail"/>
+			</AccordionDetails>
+		</Accordion>
 	)
 }
 
