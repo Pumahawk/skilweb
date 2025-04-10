@@ -1,8 +1,10 @@
 import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material"
-import { BackendPage, SiteMetadata } from "../services/metadata/dto"
+import { BackendPage, SearchFilterData, SearchPageData, SiteMetadata } from "../services/metadata/dto"
 import { People, Work } from "@mui/icons-material"
 
 import Box from "@mui/material/Box"
+
+const drawerWidth = 240;
 
 interface VoiceMenu {
 	id: string;
@@ -15,25 +17,14 @@ export function Dashboard(props: {metadata: SiteMetadata}) {
 		{ id: "01", icon: "people", text: "Users" },
 		{ id: "02", icon: "work", text: "Projects" },
 	]
+	const searchData: SearchPageData = {
+		type: "search",
+		filters: [{type: "text", name: "Testing..."}],
+	}
 	return (
 		<Box display="flex" position="fixed">
-			<Drawer variant="permanent">
-				<List sx={{width: 250}}>
-					{ voicesMenu.map(m => (
-						<ListItem key={m.id} disablePadding>
-							<ListItemButton>
-								<ListItemIcon>
-									<Icon icon={m.icon}/>
-								</ListItemIcon>
-								<ListItemText primary={m.text}/>
-							</ListItemButton>
-						</ListItem>
-					))}
-				</List>
-			</Drawer>
-			<Box flex="1">
-			main
-			</Box>
+			<Menu voicesMenu={voicesMenu}/>
+			<SearchPage data={searchData}/>
 		</Box>
 	)
 }
@@ -44,12 +35,33 @@ export function Header() {
 	)
 }
 
-export function Menu(props: {pages: BackendPage[]}) {
+export function Menu(props: {voicesMenu: VoiceMenu[]}) {
 	return (
-		<div>
-			<div>Menu</div>
-			{ props.pages && props.pages.map((p, i) => (<div id={i.toString()}>Type: {p.type}</div>)) }
-		</div>
+		<Drawer
+		sx={{
+		  width: drawerWidth,
+		  flexDirection: "column",
+		  flexShrink: 0,
+		  '& .MuiDrawer-paper': {
+		    width: drawerWidth,
+		    boxSizing: 'border-box',
+		  },
+		}}
+		variant="permanent">
+			<List sx={{width: "100%"}}>
+				{ props.voicesMenu.map(m => (
+					<ListItem key={m.id} disablePadding>
+						<ListItemButton>
+							<ListItemIcon>
+								<Icon icon={m.icon}/>
+							</ListItemIcon>
+							<ListItemText primary={m.text}/>
+						</ListItemButton>
+					</ListItem>
+				))}
+			</List>
+		</Drawer>
+
 	)
 }
 
@@ -74,4 +86,29 @@ function Icon(props: {icon: MatIcon}) {
 		case "work":
 			return <Work/>
 	}
+}
+
+function SearchPage(props: {data: SearchPageData}) {
+	return (
+		<Box flexGrow="1" display="flex">
+			<SearchFilters filters={props.data.filters}/>
+			<SearchContent/>
+		</Box>
+	)
+}
+
+function SearchFilters(props: {filters: SearchFilterData[]}) {
+	return (
+		<Box style={{width: "100%"}} display="flex">
+			Filters....
+		</Box>
+	)
+}
+
+function SearchContent() {
+	return (
+		<Box display="flex">
+			Content...
+		</Box>
+	)
 }

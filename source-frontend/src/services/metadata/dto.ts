@@ -9,18 +9,18 @@ export interface BackendPage {
 	type: PageType;
 }
 
-export interface SearchFilter {
+export interface SearchFilterData {
 	name: string;
 	type: FilterType;
 }
 
-export interface TextFilter extends SearchFilter {
+export interface TextFilter extends SearchFilterData {
 	name: string;
 	type: 'text';
 	label: string;
 }
 
-export interface SearchPage extends BackendPage {
+export interface SearchPageData extends BackendPage {
 	type: 'search';
-	filters: SearchFilter[];
+	filters: SearchFilterData[];
 }
