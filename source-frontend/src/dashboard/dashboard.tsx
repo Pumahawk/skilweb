@@ -22,7 +22,7 @@ export function Dashboard(props: {metadata: SiteMetadata}) {
 		filters: [{type: "text", name: "Testing..."}],
 	}
 	return (
-		<Box display="flex" position="fixed">
+		<Box sx={{display: "flex"}}>
 			<Menu voicesMenu={voicesMenu}/>
 			<SearchPage data={searchData}/>
 		</Box>
@@ -90,7 +90,10 @@ function Icon(props: {icon: MatIcon}) {
 
 function SearchPage(props: {data: SearchPageData}) {
 	return (
-		<Box flexGrow="1" display="flex">
+	    	<Box
+			component="main"
+			sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, flexDirection: "column"}}
+	      	>
 			<SearchFilters filters={props.data.filters}/>
 			<SearchContent/>
 		</Box>
@@ -99,7 +102,7 @@ function SearchPage(props: {data: SearchPageData}) {
 
 function SearchFilters(props: {filters: SearchFilterData[]}) {
 	return (
-		<Box style={{width: "100%"}} display="flex">
+		<Box>
 			Filters....
 		</Box>
 	)
@@ -107,7 +110,7 @@ function SearchFilters(props: {filters: SearchFilterData[]}) {
 
 function SearchContent() {
 	return (
-		<Box display="flex">
+		<Box>
 			Content...
 		</Box>
 	)
